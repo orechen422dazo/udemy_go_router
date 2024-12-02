@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:udemy_go_router/core/route_path.dart';
 import 'package:udemy_go_router/detail_page.dart';
 import 'package:udemy_go_router/home_page.dart';
 import 'package:udemy_go_router/login_page.dart';
@@ -11,13 +12,13 @@ final GoRouter router = GoRouter(
   routes: <RouteBase>[
     /// TOP LEVEL PATH
     GoRoute(
-      path: '/',
+      path: RoutePath.splash,
       name: 'splash',
       builder: (BuildContext context, GoRouterState state) => const SplashPage(),
     ),
     /// TOP LEVEL PATH
     GoRoute(
-        path: '/login/redirection',
+        path: RoutePath.redirection,
         name: 'login-redirection',
         redirect: (BuildContext context, GoRouterState state) async {
           if (await checkedLoggedIn()) {
@@ -28,7 +29,7 @@ final GoRouter router = GoRouter(
         }),
     /// Page
     GoRoute(
-        path: '/home',
+        path: RoutePath.home,
         name: 'home',
       pageBuilder: (context, state) => NoTransitionPage<void>(
         key: state.pageKey,
@@ -37,7 +38,7 @@ final GoRouter router = GoRouter(
       ),
       routes: [
         GoRoute(
-          path: 'detail/:id',  // /home/detail/:id となる
+          path: RoutePath.detailId,  // /home/detail/:id となる
           name: 'detail',
           builder: (context, state) => DetailPage(
             id: state.pathParameters['id']!,
@@ -47,7 +48,7 @@ final GoRouter router = GoRouter(
     ),
     /// Login
     GoRoute(
-        path: '/login',
+        path: RoutePath.login,
         name: 'login',
         pageBuilder: (context, state) => NoTransitionPage<void>(
           key: state.pageKey,
