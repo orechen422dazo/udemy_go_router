@@ -1,16 +1,70 @@
 # udemy_go_router
+Udemyの講座でGoRouterの学習。
 
-A new Flutter project.
+パスの設定がバージョンアップで変更されていたのと、`context.goNamed`を使用しないとモバイルではルートのエラーが発生する。
 
-## Getting Started
+非同期な処理を記述するときは、if(mounted) が必要だった。過去の動画だとLintの警告が出てこないようだ。
 
-This project is a starting point for a Flutter application.
+```dart
+import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
-A few resources to get you started if this is your first Flutter project:
+class SplashPage extends StatefulWidget {
+  const SplashPage({super.key});
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+  @override
+  State<SplashPage> createState() => _SplashPageState();
+}
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+class _SplashPageState extends State<SplashPage> {
+
+  @override
+  void initState() {
+    super.initState();
+    Future.delayed(const Duration(seconds: 3)).then((value) {
+      if(mounted) {
+        context.go('/login/redirection');
+      }
+    });
+  }
+  @override
+  Widget build(BuildContext context) {
+    return const Scaffold(
+      body: Center(
+        child: Text('スプラッシュ', style: TextStyle(fontSize: 24)),
+      ),
+    );
+  }
+}
+```
+
+### Case Login Page
+```dart
+import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
+import 'package:udemy_go_router/sessions.dart';
+
+class LoginPage extends StatelessWidget {
+  const LoginPage({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            const Text('このアプリをご利用の方はログインください。'),
+            ElevatedButton(onPressed: () async {
+              await login();
+              if(context.mounted) {
+                context.go('/login/redirection');
+              }
+            }, child: const Text('ログインする'))
+          ],
+        ),
+      ),
+    );
+  }
+}
+```
